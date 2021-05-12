@@ -85,17 +85,18 @@
 
 		// Add GeoJSON Data
 		// Null variable that will hold Healthsites data
-var Healthsites = null;
+		// Null variable that will hold Healthsites data
+		var Healthsites = null;
 
-// Add GeoJSON Data to the map when it loads
-$.getJSON("data/Mali_healthsites.geojson",function(data){
-    // set Healthsites to the dataset and add the Healthsites GeoJSON layer to the map
-    Healthsites = L.geoJson(data,{
-		onEachFeature: function (feature, layer) {
-			layer.bindPopup(); // What's missing here?
-		}
-	}).addTo(map);
-});
+		// Add GeoJSON Data to the map when it loads
+		$.getJSON("data/Mali_healthsites.geojson",function(data){
+		    // set Healthsites to the dataset and add the Healthsites GeoJSON layer to the map
+		    Healthsites = L.geoJson(data,{
+				onEachFeature: function (feature, layer) {
+					layer.bindPopup(); // What's missing here?
+				}
+			}).addTo(map);
+		});
 
 		// Create Custom Icons Here
 
