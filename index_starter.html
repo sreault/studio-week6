@@ -66,18 +66,36 @@
 	</div>
 	<script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<script src='https://api.mapbox.com/mapbox-gl-js/v1.11.1/mapbox-gl.js'></script>
 	<script>
     	// Create Map Object
-    	var map = L.map('map',{ center: [39.7644,-104.8548], zoom: 9 });
+    	var map = L.map('map',{ center: [-3.87472, 17.98777], zoom: 6 });
 
     	// Add Tile Layer
-		L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager_labels_under/{z}/{x}/{y}{r}.png', {
-			attribution: 'Tiles by <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a> | Data by <a href="url here">Who???</a>',
-			maxZoom: 17,
-			minZoom: 9
-		}).addTo(map);
+
+			mapboxgl.accessToken = 'pk.eyJ1Ijoic3JlYXVsdCIsImEiOiJja25qYXF4OGMwODlwMm9tMmF3a2V5cHh5In0.rmpWlPsAnyN1YBg4XTJQug';
+	    var map = new mapboxgl.Map({
+	      container: 'map',
+	      style: 'mapbox://styles/sreault/ckoegytgj3qaw17ryyul7fzue', // imagery basemap - you may choose something else
+	      center: [-3.87472, 17.98777], // starting position at Zaatari Camp
+	      zoom: 6, // starting zoom
+				infoControl: false,
+				attributionControl: false
+				});
 
 		// Add GeoJSON Data
+		// Null variable that will hold Healthsites data
+var Healthsites = null;
+
+// Add GeoJSON Data to the map when it loads
+$.getJSON("data/Mali_healthsites.geojson",function(data){
+    // set Healthsites to the dataset and add the Healthsites GeoJSON layer to the map
+    Healthsites = L.geoJson(data,{
+		onEachFeature: function (feature, layer) {
+			layer.bindPopup(); // What's missing here?
+		}
+	}).addTo(map);
+});
 
 		// Create Custom Icons Here
 
