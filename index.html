@@ -91,7 +91,7 @@
 		var Healthsites = null;
 
 		// Add GeoJSON Data to the map when it loads
-		$.getJSON("https://raw.githubusercontent.com/sreault/studio-week6/main/data/Mali_healthsites.geojson",function(data){
+		$.getJSON("data/Mali_healthsites.geojson",function(data){
 		    // set Healthsites to the dataset and add the Healthsites GeoJSON layer to the map
 		    Healthsites = L.geoJson(data,{
 				onEachFeature: function (feature, layer) {
