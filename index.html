@@ -100,12 +100,21 @@
 		// Create Custom Icons Here
 		// Create Custom Icons Here
 // Start by creating a standard Health Icon
-var healthIcon = L.icon({
-  iconUrl: 'icons/health_facility.png',
-  iconSize: [24,24],
-  iconAnchor: [12,12],
-  popupAnchor: [0,-6]
+var healthIcon = L.Icon.extend({ // adding the .extend and capital I!
+  options:{
+    iconUrl: 'icons/hospital.png',
+    iconSize: [24,24],
+    iconAnchor: [12,12],
+    popupAnchor: [0,-6]
+  }
 });
+
+// Create specific icons for amenity types
+var clinicIcon = new healthIcon({iconUrl: 'icons/clinic.png'});
+var dentistIcon = new healthIcon({iconUrl: 'icons/dentist.png'});
+var doctorsIcon = new healthIcon({iconUrl: 'icons/doctor.png'});
+var hospitalIcon = new healthIcon({iconUrl: 'icons/hospital.png'});
+var pharmacyIcon = new healthIcon({iconUrl: 'icons/medicine.png'});
 
 		// Add Admin unit Polygons
 
