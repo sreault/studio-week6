@@ -49,6 +49,8 @@
 			margin-top: 0px;
 			margin-bottom: 0px;
 		}
+
+
 	</style>
 </head>
 <body>
@@ -85,17 +87,27 @@
 		var Healthsites = null;
 
 		// Add GeoJSON Data to the map when it loads
-		$.getJSON("data/Mali_healthsites.geojson",function(data){
-	    // set Healthsites to the dataset and add the Healthsites GeoJSON layer to the map
-	    Healthsites = L.geoJson(data,{
-	      onEachFeature: function (feature, layer) {
-	        layer.bindPopup('Type: '+feature.properties.amenity+'<br>Name: '+feature.properties.name+'');
-	    }, pointToLayer: function (feature, latlng) { // We're adding pointToLayer & the marker variable.
-	      var marker = L.marker(latlng,{icon: healthIcon});
-	      return marker;
-	      }
-	    }).addTo(map);
-	});
+		$.getJSON("https://raw.githubusercontent.com/sreault/studio-week6/main/data/Mali_healthsites.geojson",function(data){
+		    // set Healthsites to the dataset and add the Healthsites GeoJSON layer to the map
+		    Healthsites = L.geoJson(data,{
+		      onEachFeature: function (feature, layer) {
+		        layer.bindPopup('Type: '+feature.properties.amenity+'<br>Name: '+feature.properties.name+'');
+		      }, pointToLayer: function (feature, latlng) {
+		        if (feature.properties.amenity == "clinic"){ // Replacing previous marker with conditionals
+		          var marker = L.marker(latlng,{icon: clinicIcon});
+		        } else if (feature.properties.amenity == "dentist") {
+		          var marker = L.marker(latlng,{icon: dentistIcon});
+		        } else if (feature.properties.amenity == "doctors") {
+		          var marker = L.marker(latlng,{icon: doctorsIcon});
+		        } else if (feature.properties.amenity == "hospital") {
+		          var marker = L.marker(latlng,{icon: hospitalIcon});
+		        } else {
+		          var marker = L.marker(latlng,{icon: pharmacyIcon});
+		        };
+		      return marker;
+		      }
+		    }).addTo(map);
+		});
 
 		// Create Custom Icons Here
 		// Create Custom Icons Here
@@ -114,12 +126,65 @@ var clinicIcon = new healthIcon({iconUrl: 'icons/clinic.png'});
 var dentistIcon = new healthIcon({iconUrl: 'icons/dentist.png'});
 var doctorsIcon = new healthIcon({iconUrl: 'icons/doctor.png'});
 var hospitalIcon = new healthIcon({iconUrl: 'icons/hospital.png'});
-var pharmacyIcon = new healthIcon({iconUrl: 'icons/medicine.png'});
+var pharmacyIcon = new healthIcon({iconUrl: 'icons/pharmacy.png'});
 
 		// Add Admin unit Polygons
+		// Null variable that will hold admin units layer
+		var adminLayer = null;
+
+		// Add Admin Polygons
+		// Add Admin Polygons
+	$.getJSON("https://raw.githubusercontent.com/sreault/studio-week6/main/data/Mali_Prevalence_Global_Acute_Malnutrition.geojson",function(data){
+	    adminLayer = L.geoJson(data, {style: style}).addTo(map);
+			function setColor(Wast_Text){
+			return Wast_Text == 'High' ? '#e6550d' :
+			  Wast_Text == 'Medium' ? '#fdae6b' :
+			  Wast_Text == 'Low' ? '#fee6ce' :
+			                   '#d4cfcd';
+			};
+			function style(feature) {
+			  return {
+			    fillColor: setColor(feature.properties.Wast_Text),
+			    fillOpacity: 0.7,
+			    weight: 0,
+			    opacity: 0,
+			    color: '#ffffff',
+			    dashArray: '0'
+			  };
+			}// we added {style: style} here.
+	});
+		// Set function for color ramp w/ colors from Colorbrewer
+
+// Set style function that sets fill color property equal to FI_Class
 
 		// Create Leaflet Control Object for Legend
+		var legend = L.control({
+		  position: 'topright'
+		});
 
+		// Function that runs when legend is added to map
+		legend.onAdd = function(map) {
+
+		  // Create Div Element and Populate it with HTML
+		  var div = L.DomUtil.create('div', 'legend');
+		  div.innerHTML += '<b>Prevalence of wasting </b><br/>';
+		  div.innerHTML += '<b>in children < 5 yrs. old,</b><br/>';
+		  div.innerHTML += '<b>by region</b><br/>';
+		  div.innerHTML += '<i style="background: #e6550d"></i><p>High</p>';
+		  div.innerHTML += '<i style="background: #fdae6b"></i><p>Medium</p>';
+		  div.innerHTML += '<i style="background: #fee6ce"></i><p>Low</p>';
+		  div.innerHTML += '<i style="background: #d4cfcd"></i><p>Uncategorized</p>';
+		  div.innerHTML += '<hr><img src="icons/clinic.png"><p>Clinic</p>';
+		  div.innerHTML += '<img src="icons/dentist.png"><p>Dentist</p>';
+		  div.innerHTML += '<img src="icons/doctor.png"><p>Doctor</p>';
+		  div.innerHTML += '<img src="icons/hospital.png"><p>Hospital</p>';
+		  div.innerHTML += '<img src="icons/pharmacy.png"><p>Pharmacy</p>';
+		  // Return the Legend div containing the HTML content
+		  return div;
+		};
+
+		// Add Legend to Map
+		legend.addTo(map);
 		// Add Scale Bar to Map
 
 
