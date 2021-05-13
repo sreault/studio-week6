@@ -95,7 +95,7 @@
 		    // set Healthsites to the dataset and add the Healthsites GeoJSON layer to the map
 		    Healthsites = L.geoJson(data,{
 				onEachFeature: function (feature, layer) {
-					layer.bindPopup(); // What's missing here?
+					layer.bindPopup("<strong>" + feature.properties.Name + "</strong><br/>" + feature.properties.amenity + "amenity"); // What's missing here?
 				}
 			}).addTo(map);
 		});
