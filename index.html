@@ -4,7 +4,8 @@
 	<title>Mali Health Sites Map</title>
 	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" />
 	<script src="https://kit.fontawesome.com/affd48a08b.js" crossorigin="anonymous"></script>
-	<style>
+	<link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+	<style type="text/css">
 		body {
 			margin: 0px;
 		}
@@ -27,9 +28,9 @@
 		}
 
 		#map {
-			width: 780px;
+			width: 900px;
 			margin: 0 auto;
-			height: 500px;
+			height: 600px;
 		}
 
 		#controls {
@@ -49,6 +50,33 @@
 			margin-top: 0px;
 			margin-bottom: 0px;
 		}
+		.legend{
+			line-height: 18px;
+			color: #333333;
+			font-family: Helvetica, sans-serif;
+			padding: 6px 8px;
+			background: white;
+			background: rgba(255,255,255,0.8);
+			box-shadow: 0 0 15px rgba(0,0,0,0.2);
+			border-radius: 5px;
+		}
+		.legend i {
+			width: 18px;
+			height: 18px;
+			float: left;
+			margin-right: 8px;
+			opacity: 0.7;
+		}
+		.legend img {
+			width: 18px;
+			height: 18px;
+			float: left;
+		}
+		.legend p {
+			font-size: 12px;
+			line-height: 18px;
+			margin: 0;
+		}
 
 
 	</style>
@@ -64,11 +92,13 @@
 			<!-- Here is the code for a button if we were going to add them.
 			<button class="button" id="toggleButton">BUTTON!</button>
 			-->
-			<div id="narrative"><p>You can put narrative text or explanation here.</p></div>
+			<div id="narrative"><p>		I think this is a strong preliminary map representing malnutrition trends and the locations of various health sites in Mali. However, there are a few qualities that could benefit from improvement, both in terms of mapping techniques and content. First of all, the malnutrition data used here represented wasting in children under five; therefore, this page should be updated as describing malnutrition in children, or potentially a more age inclusive layer could be utilized.  It is also important to normalize this kind of demographic data by population, which is not detailed here; if the data is normalized, that should be described. Furthermore, I think the health site data could be adapted. First of all, there do not appear to be any dentist locations in Mali, so this amenity could be removed. Furthermore, symbolizing the health site icons by size could de-clutter the map, allowing for once larger icon to represent high density of a given amenity. Also, this map does not include locations of emergency rooms/urgent care centers, which may be helpful, although those amenities could be included within hospitals/clinics. A large portion of the health sites are clinics. It may be beneficial to categorize these sites further by type of clinic, so the map is easier to interpret without clicking on each location. As this map is describing specific health crisis, it may be possible to limit the clinics shown to those pertaining to nutritional needs. Food banks (if present) could also be a relevant resource to include in the map. </p></div>
 		</div>
 	</div>
 	<script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+	<script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
 	<script>
     	// Create Map Object
 			var map = L.map('map',{ center: [15.49, -3.253333], zoom: 6 });
@@ -117,7 +147,7 @@ var healthIcon = L.Icon.extend({ // adding the .extend and capital I!
     iconUrl: 'icons/hospital.png',
     iconSize: [24,24],
     iconAnchor: [12,12],
-    popupAnchor: [0,-6]
+    popupAnchor: [0,-6],
   }
 });
 
@@ -186,6 +216,15 @@ var pharmacyIcon = new healthIcon({iconUrl: 'icons/pharmacy.png'});
 		// Add Legend to Map
 		legend.addTo(map);
 		// Add Scale Bar to Map
+		L.control.scale({position: 'bottomleft'}).addTo(map);
+
+		//Adding the search geocoder
+L.Control.geocoder({
+  position: "topleft",
+  placeholder: "Enter place name",
+  errorMessage: "No place found.",
+})
+.addTo(map);
 
 
 	</script>
