@@ -2,9 +2,8 @@
 <html>
 <head>
 	<title>Mali Health Sites Map</title>
-	<script src='https://api.mapbox.com/mapbox-gl-js/v2.2.0/mapbox-gl.js'></script>
-	<link href='https://api.mapbox.com/mapbox-gl-js/v2.2.0/mapbox-gl.css' rel='stylesheet' />
-	<script src="https://cdn.jsdelivr.net/npm/@turf/turf@5/turf.min.js"></script>
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" />
+	<script src="https://kit.fontawesome.com/affd48a08b.js" crossorigin="anonymous"></script>
 	<style>
 		body {
 			margin: 0px;
@@ -68,22 +67,17 @@
 	</div>
 	<script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-	<script src='https://api.mapbox.com/mapbox-gl-js/v1.11.1/mapbox-gl.js'></script>
 	<script>
     	// Create Map Object
-    	var map = L.map('map',{ center: [-3.87472, 17.98777], zoom: 6 });
+			var map = L.map('map',{ center: [15.49, -3.253333], zoom: 6 });
 
     	// Add Tile Layer
+		L.tileLayer('https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png', {
+			attribution: '&copy; OpenStreetMap France | &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+			maxZoom: 17,
+			minZoom: 1
+		}).addTo(map);
 
-			mapboxgl.accessToken = 'pk.eyJ1Ijoic3JlYXVsdCIsImEiOiJja25qYXF4OGMwODlwMm9tMmF3a2V5cHh5In0.rmpWlPsAnyN1YBg4XTJQug';
-	    var map = new mapboxgl.Map({
-	      container: 'map',
-	      style: 'mapbox://styles/sreault/ckoegytgj3qaw17ryyul7fzue', // imagery basemap - you may choose something else
-	      center: [-3.87472, 17.98777], // starting position at Zaatari Camp
-	      zoom: 6, // starting zoom
-				infoControl: false,
-				attributionControl: false
-				});
 
 		// Add GeoJSON Data
 		// Null variable that will hold Healthsites data
@@ -91,15 +85,27 @@
 		var Healthsites = null;
 
 		// Add GeoJSON Data to the map when it loads
-		$.getJSON("https://raw.githubusercontent.com/sreault/studio-week6/main/data/Mali_healthsites.geojson",function(data){
-		    // set Healthsites to the dataset and add the Healthsites GeoJSON layer to the map
-		    Healthsites = L.geoJson(data,{onEachFeature: function (feature, layer) {
-					layer.bindPopup("<strong>" + feature.properties.Name + "</strong><br/>" + feature.properties.amenity + "amenity"); // What's missing here?
-				}
-			}).addTo(map);
-		});
+		$.getJSON("data/Mali_healthsites.geojson",function(data){
+	    // set Healthsites to the dataset and add the Healthsites GeoJSON layer to the map
+	    Healthsites = L.geoJson(data,{
+	      onEachFeature: function (feature, layer) {
+	        layer.bindPopup('Type: '+feature.properties.amenity+'<br>Name: '+feature.properties.name+'');
+	    }, pointToLayer: function (feature, latlng) { // We're adding pointToLayer & the marker variable.
+	      var marker = L.marker(latlng,{icon: healthIcon});
+	      return marker;
+	      }
+	    }).addTo(map);
+	});
 
 		// Create Custom Icons Here
+		// Create Custom Icons Here
+// Start by creating a standard Health Icon
+var healthIcon = L.icon({
+  iconUrl: 'icons/health_facility.png',
+  iconSize: [24,24],
+  iconAnchor: [12,12],
+  popupAnchor: [0,-6]
+});
 
 		// Add Admin unit Polygons
 
